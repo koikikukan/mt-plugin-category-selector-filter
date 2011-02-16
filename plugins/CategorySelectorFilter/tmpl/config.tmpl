@@ -1,0 +1,15 @@
+<mtapp:setting
+  id="use_plugin"
+  label="<__trans phrase="Use this plugin.">"
+  >
+  <input type="checkbox" name="use_plugin"<mt:if name="use_plugin"> checked="checked"</mt:if>" />
+</mtapp:setting>
+
+<mtapp:setting
+  id="category_id"
+  label="<__trans phrase="Selectable Category ID.">"
+  show_hint="1"
+  hint="<__trans phrase="Please set comma if multi categories.">"
+  >
+  <input type="text" name="category_id" value="<mt:if name="category_id"><mt:GetVar name="category_id" /></mt:if>" />
+</mtapp:setting>

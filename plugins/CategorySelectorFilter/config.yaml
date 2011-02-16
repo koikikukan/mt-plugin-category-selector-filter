@@ -1,0 +1,34 @@
+# CategorySelectorFilter
+#
+# Release 0.01 (Feb 17, 2011)
+#
+# Copyright (c) 2004-2011 Yujiro Araki
+
+id: CategorySelectorFilter
+name: CategorySelectorFilter
+version: 0.01
+author_link: http://www.koikikukan.com/
+author_name: Yujiro Araki
+plugin_link: http://www.koikikukan.com/archives/2011/xx/xx-xxxxxx.php
+doc_link: http://www.koikikukan.com/archives/2011/xx/xx-xxxxxx.php
+description: <__trans phrase="CategorySelectorFilter.">
+l10n_lexicon:
+    ja:
+        CategorySelectorFilter.: 選択可能なカテゴリをフィルタリングします。
+        Selectable Category ID.: 選択可能なカテゴリID
+        Please set comma if multi categories.: 複数設定する場合は半角カンマで区切ってください
+        Use this plugin.: このプラグインを有効にする
+blog_config_template: config.tmpl
+settings:
+    use_plugin:
+        scope: blog
+        default: 0
+    category_id:
+        scope: blog
+        default: ''
+applications:
+    cms:
+        callbacks:
+            template_source.category_selector: $CategorySelectorFilter::CategorySelectorFilter::CMS::add_flag
+            template_source.edit_entry: $CategorySelectorFilter::CategorySelectorFilter::CMS::add_script
+            template_param.edit_entry: $CategorySelectorFilter::CategorySelectorFilter::CMS::set_flag
