@@ -54,12 +54,12 @@ HTML
     my $new = <<HTML;
 <mt:include name="include/footer.tmpl" id="footer_include">
 <style type="text/css">
-.list-item2 {
+.list-item2, .list-item3 {
     clear: both;
     margin-bottom: 2px;
     padding: 1px 2px 1px 0;
 }
-.list-item2 label {
+.list-item2 label, .list-item3 label {
     display: inline-block;
     margin-left: 5px;
     overflow: hidden;
@@ -81,6 +81,25 @@ function setclass() {
     jQuery("#category-selector-list input[disabled=disabled]").parent().parent().parent().removeClass("list-item");
 }
 
+jQuery(function(){
+    jQuery('input.add-category-checkbox').live('change',function(){
+        if(jQuery('input.add-category-checkbox:checked').size()){
+            jQuery('input.add-category-checkbox').each(function(){
+                if(!jQuery(this).attr('checked')){
+                    if(!jQuery(this).parent().parent().parent().hasClass("list-item2")){
+                        jQuery(this).parent().parent().parent().addClass("list-item3");
+                        jQuery(this).parent().parent().parent().removeClass("list-item");
+                        jQuery(this).attr('disabled','disabled');
+                    }
+                }
+            });
+        } else {
+            jQuery('.list-item3 input').attr('disabled','');
+            jQuery('.list-item3').addClass("list-item");
+            jQuery('.list-item3').removeClass("list-item3");
+        }
+    });
+});
 /* ]]> */
 </script>
 HTML
