@@ -82,7 +82,7 @@ function setclass() {
 }
 
 jQuery(function(){
-    jQuery('input.add-category-checkbox').live('change',function(){
+    setInterval(function(){
         if(jQuery('input.add-category-checkbox:checked').size()){
             jQuery('input.add-category-checkbox').each(function(){
                 if(!jQuery(this).attr('checked')){
@@ -98,7 +98,7 @@ jQuery(function(){
             jQuery('.list-item3').addClass("list-item");
             jQuery('.list-item3').removeClass("list-item3");
         }
-    });
+    },100);
 });
 /* ]]> */
 </script>
