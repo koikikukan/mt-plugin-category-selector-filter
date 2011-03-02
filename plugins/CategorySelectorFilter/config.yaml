@@ -1,12 +1,13 @@
 # CategorySelectorFilter
 #
 # Release 0.01 (Feb 17, 2011)
+# Release 0.02 (Mar 04, 2011) fix bug and add all option and for 5.1.
 #
 # Copyright (c) 2004-2011 Yujiro Araki
 
 id: CategorySelectorFilter
 name: CategorySelectorFilter
-version: 0.01
+version: 0.02
 author_link: http://www.koikikukan.com/
 author_name: Yujiro Araki
 plugin_link: http://www.koikikukan.com/archives/2011/xx/xx-xxxxxx.php

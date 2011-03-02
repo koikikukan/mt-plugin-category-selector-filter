@@ -1,6 +1,7 @@
 package CategorySelectorFilter::CMS;
 
 use strict;
+use Data::Dumper;
 
 sub add_flag {
     my ($cb, $app, $template) = @_;
@@ -22,21 +23,36 @@ HTML
 HTML
     $$template =~ s/$old/$new/;
 
-    $old = <<HTML;
+    if (MT->version_number >= 5.1) {
+        $old = <<HTML;
+                    <div style="width: [#= 165 - (item.path.length * 10) #]px;">
+                        <input type="<mt:if name="object_type" eq="page">radio<mt:else>checkbox</mt:if>" name="<mt:if name="object_type" eq="entry">add_</mt:if>category_id<mt:if name="object_type" eq="entry">_[#= item.id #]</mt:if>" class="add-category-checkbox" <mt:if name="category_is_selected">checked="checked"</mt:if> /> [#|h item.label #]
+                    </div>
+HTML
+    } else {
+        $old = <<HTML;
                     <label style="width: [#= 165 - (item.path.length * 10) #]px;">
                         <input type="<mt:if name="object_type" eq="page">radio<mt:else>checkbox</mt:if>" name="<mt:if name="object_type" eq="entry">add_</mt:if>category_id<mt:if name="object_type" eq="entry">_[#= item.id #]</mt:if>" class="add-category-checkbox" <mt:if name="category_is_selected">checked="checked"</mt:if> /> [#|h item.label #]
                     </label>
 HTML
+    }
     $old = quotemeta($old);
 
-    $new = <<HTML;
-
+    if (MT->version_number >= 5.1) {
+        $new = <<HTML;
                 [# if ( item.disabled == 1 ) item.disabled = [] #]
-
+                    <div style="width: [#= 165 - (item.path.length * 10) #]px;">
+                        <input type="<mt:if name="object_type" eq="page">radio<mt:else>checkbox</mt:if>" name="<mt:if name="object_type" eq="entry">add_</mt:if>category_id<mt:if name="object_type" eq="entry">_[#= item.id #]</mt:if>" class="add-category-checkbox" <mt:if name="category_is_selected">checked="checked"</mt:if> [#= item.disabled #] /> [#|h item.label #]
+                    </div>
+HTML
+    } else {
+        $new = <<HTML;
+                [# if ( item.disabled == 1 ) item.disabled = [] #]
                     <label style="width: [#= 165 - (item.path.length * 10) #]px;">
                         <input type="<mt:if name="object_type" eq="page">radio<mt:else>checkbox</mt:if>" name="<mt:if name="object_type" eq="entry">add_</mt:if>category_id<mt:if name="object_type" eq="entry">_[#= item.id #]</mt:if>" class="add-category-checkbox" <mt:if name="category_is_selected">checked="checked"</mt:if> [#= item.disabled #] /> [#|h item.label #]
                     </label>
 HTML
+    }
     $$template =~ s/$old/$new/;
 }
 
@@ -45,6 +61,9 @@ sub add_script {
 
     my $q = $app->param;
     return if $q->param('_type') eq 'page';
+
+    my $plugin = MT->component("CategorySelectorFilter");
+    return if !$plugin->get_config_value('use_plugin', 'blog:'.$app->blog->id);
 
     my $old = <<HTML;
 <mt:include name="include/footer.tmpl" id="footer_include">
@@ -120,6 +139,17 @@ sub set_flag {
     return if !$plugin->get_config_value('use_plugin', 'blog:'.$app->blog->id);
 
     my $cat_ids = $plugin->get_config_value('category_id', 'blog:'.$app->blog->id);
+
+    if ($cat_ids eq 'all' || $cat_ids eq '') {
+        my $iter = MT::Category->load_iter({ blog_id => $app->blog->id, class => 'category' });
+        my @tmp_cats;
+        while ( my $category = $iter->() ){
+            push(@tmp_cats, $category->id);
+        }
+        $cat_ids = join(',', @tmp_cats);
+        return if !$cat_ids;
+    }
+
     $cat_ids =~ s/\s//g;
     my @cats = split(/,/, $cat_ids);
 
